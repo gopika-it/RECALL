@@ -1,0 +1,6 @@
+{
+  "name": "RECALL — Everything You Learn, Connected",
+  "description": "A personal learning memory system that takes scattered learning materials and turns them into connected knowledge, AI-assisted understanding, quizzes, memory analysis and focused revision.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
