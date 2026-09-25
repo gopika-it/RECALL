@@ -29,7 +29,14 @@ export type ScreenType =
   | 'notifications'
   | 'settings';
 
-export type MasteryStatus = 'strong' | 'needs_practice' | 'forgetting_soon';
+export type MasteryStatus = 'strong' | 'needs_practice' | 'forgetting_soon' | 'unknown';
+
+export interface ChatSource {
+  materialId: string;
+  materialName?: string;
+  page?: number | null;
+  chunkId?: string;
+}
 
 export interface Concept {
   id: string;
@@ -43,10 +50,11 @@ export interface Concept {
   relatedConceptIds: string[];
   quickRecallQuestion: string;
   quickRecallAnswer: string;
-  mastery: number; // 0 - 100
+  mastery: number | null;
   status: MasteryStatus;
-  lastReviewed: string;
+  lastReviewed: string | null;
   category: string;
+  attempts?: number;
 }
 
 export interface Resource {
@@ -55,17 +63,21 @@ export interface Resource {
   type: 'pdf' | 'notes' | 'web' | 'audio';
   conceptCount: number;
   quizCount: number;
+  chunkCount?: number;
+  status?: string;
   uploadDate: string;
   fileSize?: string;
   summary: string;
   conceptIds: string[];
+  originalFilename?: string;
+  errorMessage?: string | null;
 }
 
 export interface GraphNode {
   id: string;
   label: string;
   category: string;
-  mastery: number;
+  mastery: number | null;
   x: number;
   y: number;
   conceptId?: string;
@@ -91,8 +103,8 @@ export interface QuizResultSummary {
   score: number;
   total: number;
   percentage: number;
-  masteryBefore: number;
-  masteryAfter: number;
+  masteryBefore: number | null;
+  masteryAfter: number | null;
   conceptId: string;
   conceptTitle: string;
   whatYouKnow: string[];
@@ -107,10 +119,13 @@ export interface ChatMessage {
   conceptId?: string;
   conceptTitle?: string;
   savedToKnowledge?: boolean;
+  sources?: ChatSource[];
+  pending?: boolean;
+  error?: boolean;
 }
 
 export interface UserPreferences {
-  dailyRevisionTime: string; // e.g. "15 mins (Evening)"
+  dailyRevisionTime: string;
   quizDifficulty: 'Easy' | 'Adaptive' | 'Challenging';
   preferredExplanationStyle: 'Intuitive & Analogy' | 'Concise & Academic' | 'Visual & Step-by-Step';
   reminderFrequency: 'Daily at 7:00 PM' | 'Twice daily' | 'Weekdays only' | 'Gentle notifications';
@@ -123,6 +138,10 @@ export interface UserProfile {
   quizzesCount: number;
   streakDays: number;
   xp: number;
+  major?: string;
+  conceptsLearned?: number;
+  quizzesTaken?: number;
+  retentionRate?: number | null;
 }
 
 export interface Achievement {
@@ -151,4 +170,24 @@ export interface SavedNote {
   conceptId?: string;
   resourceTitle: string;
   date: string;
+}
+
+export interface ProcessingStatus {
+  id: string;
+  status: string;
+  errorMessage?: string | null;
+  chunkCount: number;
+  conceptCount: number;
+  pageCount: number;
+  title: string;
+  filename: string;
+  conceptTitles: string[];
+}
+
+export interface RevisionItem {
+  id: string;
+  title: string;
+  topic: string;
+  mastery: number | null;
+  status: MasteryStatus;
 }
